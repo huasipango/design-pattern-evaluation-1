@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class=" m-auto h-full">
-      <h1 class="text-center mt-12 text-grey font-bold">Factory Method</h1>
+      <h1 class="text-center mt-12 text-grey font-bold">Patrón Factory Method</h1>
       <form class="w-full max-w-sm m-auto mt-16 rounded border p-10 border-grey-light">
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">
@@ -18,7 +18,7 @@
           </label>
         </div>
         <div class="md:w-2/3">
-          <input class="bg-grey-lighter appearance-none border-2 border-grey-lighter rounded w-full py-2 px-4 text-grey-darker leading-tight focus:outline-none focus:bg-white focus:border-purple" id="inline-full-name" type="text" placeholder="username">
+          <input class="bg-grey-lighter appearance-none border-2 border-grey-lighter rounded w-full py-2 px-4 text-grey-darker leading-tight focus:outline-none focus:bg-white focus:border-purple" id="inline-username" type="text" placeholder="username" name="username">
         </div>
       </div>
       <div class="md:flex md:items-center mb-6">
@@ -28,21 +28,17 @@
           </label>
         </div>
         <div class="md:w-2/3">
-          <input class="bg-grey-lighter appearance-none border-2 border-grey-lighter rounded w-full py-2 px-4 text-grey-darker leading-tight focus:outline-none focus:bg-white focus:border-purple" id="inline-username" type="password" placeholder="******************">
+          <input class="bg-grey-lighter appearance-none border-2 border-grey-lighter rounded w-full py-2 px-4 text-grey-darker leading-tight focus:outline-none focus:bg-white focus:border-purple" id="inline-username" type="password" placeholder="************" name="password">
         </div>
       </div>
       <div class="flex">
-          <button class="flex-1 shadow bg-blue hover:bg-blue-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="button">
-            Registrar en MySql
-          </button>
-          <button class="flex-1 shadow bg-green hover:bg-green-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="button">
-            Registrar en PostgreSQL
-          </button>
+          <input class="flex-1 shadow bg-blue hover:bg-blue-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit" value="Registrar en MySql">
+          <input class="flex-1 shadow bg-green hover:bg-green-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit" value="Registrar en PostgreSQL">
       </div>
       </div>
     </form>
     < <p class="text-center text-grey text-xs">
-    ©2018. All rights reserved.
+    ©2018. Todos los derechos reservados.
   </p>
 </div>
 </body>
