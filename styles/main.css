@@ -1,0 +1,5 @@
+input, button, submit { border:none; } 
+a {
+  color: blue;
+  text-decoration: none; /* no underline */
+}
