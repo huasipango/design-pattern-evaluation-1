@@ -1,6 +1,7 @@
 <?php
 
 require_once('config.php');
+require_once('app/start.php');
 
 $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
 
@@ -53,6 +54,9 @@ $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('
 	      <div class="flex">
 	          <button name="connector" value="google" class="text-center flex-1 shadow bg-red hover:bg-red-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-google fa-lg"></i></button>
 	          <button name="connector" value="facebook" class="text-center flex-1 shadow bg-blue-dark hover:bg-blue-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-facebook-f fa-lg"></i></button>
+            <a href="<?php echo $helper->getLoginUrl($config['scopes']);?>" >
+            iniciar sesion fb
+            </a>
 	          <button name="connector" value="github" class="text-center flex-1 shadow bg-black hover:bg-black-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-github-alt fa-lg"></i></button>
 	      </div>
       </div>
