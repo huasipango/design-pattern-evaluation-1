@@ -78,30 +78,6 @@ class GithubConnector implements SocialNetworkConnector
 
 }
 
-/**
- * Next I’ll define my “Factory” class, which in this case is a NetworkConnectorFactory class. 
- * As you can see from the code below, the ConnectorFactory class has a static getNetworkConnector method 
- * that returns a NetworkConnector that depends on the criteria that has been supplied.
- */
-
-class NetworkConnectorFactory
-{
-  public static function getNetworkConnector($connector, $username, $password)
-  {
-    if ( $connector == "google" ){
-      return new GoogleConnector($username, $password);
-    }
-    elseif ( $connector == "facebook" ){
-      return new FacebookConnector($username, $password);
-    }
-    elseif ( $connector == "github" ){
-      return new GithubConnector($username, $password);
-    }
-    else{
-        return null;
-    }
-  }
-}
 
 
 /**
@@ -111,29 +87,27 @@ class NetworkConnectorFactory
  * the client code.
  */
  
+
+function clientCode(SocialNetworkConnector $creator)
+{
+   $creator->logIn();
+}
+
 $connector = $_GET['connector'];
 $username = $_GET['username'];
 $password = $_GET['password'];
 
-print("Testing ConcreteCreatorGoogle:");
-echo "</br>";
-SocialNetworkConnector $socialNetwork = NetworkConnectorFactory::getNetworkConnector($connector, $username, $password);
 
-// $GoogleLogin = new  GoogleConnector("john_smith", "******");
-// $socialNetwork->logIn();
-echo "</br>";
-echo "</br>";
+if ( $connector == "google" ){
+      clientCode(new GoogleConnector($username, $password));
+    }
+    elseif ( $connector == "facebook" ){
+      clientCode(new FacebookConnector($username, $password));
+    }
+    elseif ( $connector == "github" ){
+      clientCode(new GithubConnector($username, $password));
+    }
+    else{
+       echo "Método de registro incorrecto.";
+    }
 
-// print("Testing ConcreteCreatorFacebook:");
-// echo "</br>";
-// $FacebookLogin = new  FacebookConnector("john_smith", "******");
-// echo $FacebookLogin->logIn();
-// echo "</br>";
-// echo "</br>";
-
-// print("Testing ConcreteCreatorGithub:");
-// echo "</br>";
-// $GithubLogin = new  GithubConnector("john_smith", "******");
-// echo $GithubLogin->logIn();
-// echo "</br>";
-// echo "</br>";
