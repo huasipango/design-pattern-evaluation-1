@@ -1,9 +1,12 @@
 <?php
 
 require_once('config.php');
+require_once('config_facebook.php');
+require_once('start.php');//facebook
 
 $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
 
+$facebook_url = $helper->getLoginUrl($config['scopes']);
 
 /**
  * The Product interface declares behaviors of various types of products.
@@ -51,8 +54,8 @@ class FacebookConnector implements SocialNetworkConnector
 
     public function logIn()
     {
-        print("Send HTTP API request to log in user $this->username with " .
-            "password $this->password\n");
+        header("Location:" . $GLOBALS["facebook_url"]);
+        exit;
     }
 
 }
@@ -72,8 +75,8 @@ class GithubConnector implements SocialNetworkConnector
 
     public function logIn()
     {
-        print("Send HTTP API request to log in user $this->username with " .
-            "password $this->password\n");
+        header('Location: https://github.com/login/oauth/authorize?client_id=fbb760fc11659b4f565a&redirect_uri=https://factory-israteneda.c9users.io/index.php');
+        exit;
     }
 
 }
