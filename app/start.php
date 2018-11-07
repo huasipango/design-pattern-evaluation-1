@@ -13,6 +13,9 @@
 
     FacebookSession::setDefaultApplication($config['app_id'],$config['app_secret']);
     $helper = new FacebookRedirectLoginHelper('http://localhost/design-pattern-evaluation-1/index.php');
+
+
+    
     try{
         $session=$helper->getSessionFromRedirect();
         if($session):
@@ -21,7 +24,11 @@
         endif;
         if(isset($_SESSION['facebook'])):
             $session = new FacebookSession($_SESSION['facebook']);
+
             $request = new FacebookRequest($session,'GET','/me');
+            $response=$request->execute();
+            $graphObjectClass =$response->getGraphObject(GraphUser::className());
+            $facebook_user=$graphObjectClass;
         endif;
     }catch(FacebookRequestException $ex){
 

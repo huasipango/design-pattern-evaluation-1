@@ -1,7 +1,7 @@
 <?php
 
-require_once('config.php');
-require_once('app/start.php');
+require_once('config.php');//google
+require_once('app/start.php');//facebook
 
 $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
 
@@ -19,6 +19,13 @@ $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('
     <link rel="stylesheet" href="styles/main.css" type="text/css" />
 </head>
 <body>
+<?php if (isset($_SESSION['facebook'])): ?>
+
+Bienvenido, <?php echo $facebook_user->getName(); ?>
+  <a href="app/logout.php" >
+            cerrar sesion
+            </a>
+<?php else: ?>
   <div class=" m-auto h-full">
       <h1 class="text-center mt-12 text-grey font-bold">Patrón Factory Method</h1>
       <form class="w-full max-w-sm m-auto mt-16 rounded border p-10 border-grey-light" action="/factory.php">
@@ -50,19 +57,27 @@ $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('
 	      </button>
 	    </div>
 	   </div>
-		  <p class="ml-3 mt-6 mb-3 text-grey font-bold">Otros métodos de registro:</p>
+     <p class="ml-3 mt-6 mb-3 text-grey font-bold">Otros métodos de registro:</p>
 	      <div class="flex">
-	          <button name="connector" value="google" class="text-center flex-1 shadow bg-red hover:bg-red-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-google fa-lg"></i></button>
-	          <button name="connector" value="facebook" class="text-center flex-1 shadow bg-blue-dark hover:bg-blue-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-facebook-f fa-lg"></i></button>
-            <a href="<?php echo $helper->getLoginUrl($config['scopes']);?>" >
-            iniciar sesion fb
-            </a>
+	          <button name="connector" value="google" onclick="/factory.php" class="text-center flex-1 shadow bg-red hover:bg-red-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-google fa-lg"></i></button>
+	          <button name="connector" value="facebook" class="text-center flex-1 shadow bg-blue-dark hover:bg-blue-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit">
+              <i class="fab fa-facebook-f fa-lg"></i><a href="<?php echo $helper->getLoginUrl($config['scopes']);?>" >
+              FB
+              </a>
+            </button>
+            
+            
+            
 	          <button name="connector" value="github" class="text-center flex-1 shadow bg-black hover:bg-black-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-github-alt fa-lg"></i></button>
 	      </div>
       </div>
     </form>
     <p class="mt-5 text-center text-grey text-xs">
+
+
     ©2018. Todos los derechos reservados.
+
+<?php endif; ?>
   	</p>
 </div>
 </body>
