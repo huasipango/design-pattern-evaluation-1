@@ -15,4 +15,6 @@ define('CLIENT_SECRET', 'pWoK3S7b2J2e4VACXJZ0Mx7a');
 /* Google App Redirect Url */
 define('CLIENT_REDIRECT_URL', 'http://localhost/design-pattern-evaluation-1/indexgl.php');
 
+
+
 ?>
