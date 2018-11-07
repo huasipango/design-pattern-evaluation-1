@@ -28,7 +28,7 @@ Bienvenido, <?php echo $facebook_user->getName(); ?>
 <?php else: ?>
   <div class=" m-auto h-full">
       <h1 class="text-center mt-12 text-grey font-bold">Patrón Factory Method</h1>
-      <form class="w-full max-w-sm m-auto mt-16 rounded border p-10 border-grey-light" action="/factory.php">
+      <form class="w-full max-w-sm m-auto mt-16 rounded border p-10 border-grey-light" action="/FactoryMethodRealWorld.php">
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">
           <label class="block text-grey font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-username">
@@ -61,14 +61,13 @@ Bienvenido, <?php echo $facebook_user->getName(); ?>
 	      <div class="flex">
 	          <button name="connector" value="google" onclick="/factory.php" class="text-center flex-1 shadow bg-red hover:bg-red-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-google fa-lg"></i></button>
 	          <button name="connector" value="facebook" class="text-center flex-1 shadow bg-blue-dark hover:bg-blue-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit">
-              <i class="fab fa-facebook-f fa-lg"></i><a href="<?php echo $helper->getLoginUrl($config['scopes']);?>" >
+               <!-- el link temporal hasta implementar en FactoryM. -->
+               <i class="fab fa-facebook-f fa-lg"></i><a href="<?php echo $helper->getLoginUrl($config['scopes']);?>" >
               FB
               </a>
+             
             </button>
-            
-            
-            
-	          <button name="connector" value="github" class="text-center flex-1 shadow bg-black hover:bg-black-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-github-alt fa-lg"></i></button>
+            <button name="connector" value="github" class="text-center flex-1 shadow bg-black hover:bg-black-light focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-2 rounded" type="submit"><i class="fab fa-github-alt fa-lg"></i></button>
 	      </div>
       </div>
     </form>

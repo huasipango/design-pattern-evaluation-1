@@ -168,7 +168,7 @@ class LinkedInConnector implements SocialNetworkConnector
 /**
  * The client code can work with any subclass of SocialNetworkPoster since it
  * doesn't depend on concrete classes.
- */
+ */ 
 function clientCode(SocialNetworkPoster $creator)
 {
     // ...
@@ -177,14 +177,40 @@ function clientCode(SocialNetworkPoster $creator)
     // ...
 }
 
-/**
- * During the initialization phase, the app can decide which social network it
- * wants to work with, create an object of the proper subclass, and pass it to
- * the client code.
- */
-print("Testing ConcreteCreator1:\n");
-clientCode(new FacebookPoster("john_smith", "******"));
-print("\n\n");
+//Defines wich conection should use
+class NetworkConnectorFactory
+{
+  public static function getNetworkConnector($connector, $username, $password)
+  {
+    if ( $connector == "google" ){
+      return new GoogleConnector($username, $password);
+    }
+    elseif ( $connector == "facebook" ){
+      return new FacebookConnector($username, $password);
+    }
+    elseif ( $connector == "github" ){
+      return new GithubConnector($username, $password);
+    }
+    else{
+        return null;
+    }
+  }
+}
 
-print("Testing ConcreteCreator2:\n");
-clientCode(new LinkedInPoster("john_smith@example.com", "******"));
+//get Pameters
+$connector = $_GET['connector'];
+$username = $_GET['username'];
+$password = $_GET['password'];
+
+print("Testing ConcreteCreatorGoogle:");
+echo "</br>";
+SocialNetworkConnector $socialNetwork = NetworkConnectorFactory::getNetworkConnector($connector, $username, $password);
+
+echo "</br>";
+echo "</br>";
+// print("Testing ConcreteCreator1:\n");
+// clientCode(new FacebookPoster("john_smith", "******"));
+// print("\n\n");
+
+// print("Testing ConcreteCreator2:\n");
+// clientCode(new LinkedInPoster("john_smith@example.com", "******"));
