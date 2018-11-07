@@ -119,7 +119,8 @@ class GoogleConnector implements SocialNetworkConnector
     }
     public function logIn()
     {
-        echo("login");
+        header("Location: " . 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online');
+        exit;
     }
 }
 class GithubConnector implements SocialNetworkConnector
@@ -132,7 +133,8 @@ class GithubConnector implements SocialNetworkConnector
     }
     public function logIn()
     {
-        echo("login");
+        header('Location: https://github.com/login/oauth/authorize?client_id=fbb760fc11659b4f565a&redirect_uri=http://localhost/design-pattern-evaluation-1/indexgt.php?');
+        exit;
     }
 }
 function clientCode(SocialNetworkFactory $creator)
