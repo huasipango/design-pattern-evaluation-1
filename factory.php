@@ -1,9 +1,12 @@
 <?php
 
 require_once('config.php');
+require_once('config_facebook.php');
+require_once('start.php');//facebook
 
 $login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
 
+$facebook_url = $helper->getLoginUrl($config['scopes']);
 
 /**
  * The Product interface declares behaviors of various types of products.
@@ -51,8 +54,8 @@ class FacebookConnector implements SocialNetworkConnector
 
     public function logIn()
     {
-        print("Send HTTP API request to log in user $this->username with " .
-            "password $this->password\n");
+        header("Location:" . $GLOBALS["facebook_url"]);
+        exit;
     }
 
 }
@@ -72,36 +75,12 @@ class GithubConnector implements SocialNetworkConnector
 
     public function logIn()
     {
-        print("Send HTTP API request to log in user $this->username with " .
-            "password $this->password\n");
+        header('Location: https://github.com/login/oauth/authorize?client_id=fbb760fc11659b4f565a&redirect_uri=https://factory-israteneda.c9users.io/index.php');
+        exit;
     }
 
 }
 
-/**
- * Next I’ll define my “Factory” class, which in this case is a NetworkConnectorFactory class. 
- * As you can see from the code below, the ConnectorFactory class has a static getNetworkConnector method 
- * that returns a NetworkConnector that depends on the criteria that has been supplied.
- */
-
-class NetworkConnectorFactory
-{
-  public static function getNetworkConnector($connector, $username, $password)
-  {
-    if ( $connector == "google" ){
-      return new GoogleConnector($username, $password);
-    }
-    elseif ( $connector == "facebook" ){
-      return new FacebookConnector($username, $password);
-    }
-    elseif ( $connector == "github" ){
-      return new GithubConnector($username, $password);
-    }
-    else{
-        return null;
-    }
-  }
-}
 
 
 /**
@@ -111,29 +90,27 @@ class NetworkConnectorFactory
  * the client code.
  */
  
+
+function clientCode(SocialNetworkConnector $creator)
+{
+   $creator->logIn();
+}
+
 $connector = $_GET['connector'];
 $username = $_GET['username'];
 $password = $_GET['password'];
 
-print("Testing ConcreteCreatorGoogle:");
-echo "</br>";
-SocialNetworkConnector $socialNetwork = NetworkConnectorFactory::getNetworkConnector($connector, $username, $password);
 
-// $GoogleLogin = new  GoogleConnector("john_smith", "******");
-// $socialNetwork->logIn();
-echo "</br>";
-echo "</br>";
+if ( $connector == "google" ){
+      clientCode(new GoogleConnector($username, $password));
+    }
+    elseif ( $connector == "facebook" ){
+      clientCode(new FacebookConnector($username, $password));
+    }
+    elseif ( $connector == "github" ){
+      clientCode(new GithubConnector($username, $password));
+    }
+    else{
+       echo "Método de registro incorrecto.";
+    }
 
-// print("Testing ConcreteCreatorFacebook:");
-// echo "</br>";
-// $FacebookLogin = new  FacebookConnector("john_smith", "******");
-// echo $FacebookLogin->logIn();
-// echo "</br>";
-// echo "</br>";
-
-// print("Testing ConcreteCreatorGithub:");
-// echo "</br>";
-// $GithubLogin = new  GithubConnector("john_smith", "******");
-// echo $GithubLogin->logIn();
-// echo "</br>";
-// echo "</br>";
