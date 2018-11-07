@@ -1,7 +1,4 @@
 <?php
-
-namespace RefactoringGuru\FactoryMethod\RealWorld;
-
 /**
  * Factory Method Design Pattern
  *
@@ -26,6 +23,15 @@ namespace RefactoringGuru\FactoryMethod\RealWorld;
  * This allows changing the type of the product being created by
  * SocialNetworkPoster's subclasses.
  */
+
+// Include GitHub API config file
+require_once 'github/gitConfig.php';
+
+// Include and initialize user class
+require_once 'github/User.class.php';
+$user = new User();
+
+
 abstract class SocialNetworkPoster
 {
     /**
@@ -40,7 +46,7 @@ abstract class SocialNetworkPoster
      * subclasses may alter the logic indirectly by returning different types of
      * the connector from the factory method.
      */
-    public function post($content)
+    public function post()
     {
         // Call the factory method to create a Product object...
         $network = $this->getSocialNetwork();
@@ -48,8 +54,6 @@ abstract class SocialNetworkPoster
         //
         // ...а затем используем его по своему усмотрению.
         $network->logIn();
-        $network->createPost($content);
-        $network->logout();
     }
 }
 
@@ -58,7 +62,7 @@ abstract class SocialNetworkPoster
  * inherits the 'post' method from the parent class. Concrete Creators are the
  * classes that the Client actually uses.
  */
-class FacebookPoster extends SocialNetworkPoster
+class GithubPoster extends SocialNetworkPoster
 {
     private $login, $password;
 
@@ -70,28 +74,11 @@ class FacebookPoster extends SocialNetworkPoster
 
     public function getSocialNetwork(): SocialNetworkConnector
     {
-        return new FacebookConnector($this->login, $this->password);
+        return new GithubConnector($this->login, $this->password);
     }
 }
 
-/**
- * This Concrete Creator supports LinkedIn.
- */
-class LinkedInPoster extends SocialNetworkPoster
-{
-    private $email, $password;
 
-    public function __construct($email, $password)
-    {
-        $this->email = $email;
-        $this->password = $password;
-    }
-
-    public function getSocialNetwork(): SocialNetworkConnector
-    {
-        return new LinkedInConnector($this->email, $this->password);
-    }
-}
 
 /**
  * The Product interface declares behaviors of various types of products.
@@ -99,16 +86,12 @@ class LinkedInPoster extends SocialNetworkPoster
 interface SocialNetworkConnector
 {
     public function logIn();
-
-    public function logOut();
-
-    public function createPost($content);
 }
 
 /**
  * This Concrete Product implements the Facebook API.
  */
-class FacebookConnector implements SocialNetworkConnector
+class GithubConnector implements SocialNetworkConnector
 {
     private $login, $password;
 
@@ -120,50 +103,74 @@ class FacebookConnector implements SocialNetworkConnector
 
     public function logIn()
     {
-        print("Send HTTP API request to log in user $this->login with " .
-            "password $this->password\n");
+        if(isset($accessToken)){
+            // Get the user profile info from Github
+            $gitUser = $gitClient->apiRequest($accessToken);
+
+            if(!empty($gitUser)){
+                // User profile data
+                $gitUserData = array();
+                $gitUserData['oauth_provider'] = 'github';
+                $gitUserData['oauth_uid'] = !empty($gitUser->id)?$gitUser->id:'';
+                $gitUserData['name'] = !empty($gitUser->name)?$gitUser->name:'';
+                $gitUserData['username'] = !empty($gitUser->login)?$gitUser->login:'';
+                $gitUserData['email'] = !empty($gitUser->email)?$gitUser->email:'';
+                $gitUserData['location'] = !empty($gitUser->location)?$gitUser->location:'';
+                $gitUserData['picture'] = !empty($gitUser->avatar_url)?$gitUser->avatar_url:'';
+                $gitUserData['link'] = !empty($gitUser->html_url)?$gitUser->html_url:'';
+
+                // Insert or update user data to the database
+                $userData = $user->checkUser($gitUserData);
+
+                // Put user data into the session
+                $_SESSION['userData'] = $userData;
+
+                // Render Github profile data
+                $output  = '<h2>Github Profile Details</h2>';
+                $output .= '<img src="'.$userData['picture'].'" />';
+                $output .= '<p>ID: '.$userData['oauth_uid'].'</p>';
+                $output .= '<p>Name: '.$userData['name'].'</p>';
+                $output .= '<p>Login Username: '.$userData['username'].'</p>';
+                $output .= '<p>Email: '.$userData['email'].'</p>';
+                $output .= '<p>Location: '.$userData['location'].'</p>';
+                $output .= '<p>Profile Link :  <a href="'.$userData['link'].'" target="_blank">Click to visit GitHub page</a></p>';
+                $output .= '<p>Logout from <a href="github/logout.php">GitHub</a></p>';
+            }else{
+                $output = '<h3 style="color:red">Some problem occurred, please try again.</h3>';
+            }
+
+        }elseif(isset($_GET['code'])){
+            // Verify the state matches the stored state
+            if(!$_GET['state'] || $_SESSION['state'] != $_GET['state']) {
+                header("Location: ".$_SERVER['PHP_SELF']);
+            }
+
+            // Exchange the auth code for a token
+            $accessToken = $gitClient->getAccessToken($_GET['state'], $_GET['code']);
+
+            $_SESSION['access_token'] = $accessToken;
+
+            header('Location: ./');
+        }else{
+            // Generate a random hash and store in the session for security
+            $_SESSION['state'] = hash('sha256', microtime(TRUE) . rand() . $_SERVER['REMOTE_ADDR']);
+
+            // Remove access token from the session
+            unset($_SESSION['access_token']);
+
+            // Get the URL to authorize
+            $loginURL = $gitClient->getAuthorizeURL($_SESSION['state']);
+
+            // Render Github login button
+            $output = '<a href="'.htmlspecialchars($loginURL).'"><strong>CONECTARSE A GITHUB</strong></a>';
+        }
+
     }
 
-    public function logOut()
-    {
-        print("Send HTTP API request to log out user $this->login\n");
-    }
 
-    public function createPost($content)
-    {
-        print("Send HTTP API requests to create a post in Facebook timeline.\n");
-    }
 }
 
-/**
- * This Concrete Product implements the LinkedIn API.
- */
-class LinkedInConnector implements SocialNetworkConnector
-{
-    private $email, $password;
 
-    public function __construct($email, $password)
-    {
-        $this->email = $email;
-        $this->password = $password;
-    }
-
-    public function logIn()
-    {
-        print("Send HTTP API request to log in user $this->email with " .
-            "password $this->password\n");
-    }
-
-    public function logOut()
-    {
-        print("Send HTTP API request to log out user $this->email\n");
-    }
-
-    public function createPost($content)
-    {
-        print("Send HTTP API requests to create a post in LinkedIn timeline.\n");
-    }
-}
 
 /**
  * The client code can work with any subclass of SocialNetworkPoster since it
@@ -172,9 +179,7 @@ class LinkedInConnector implements SocialNetworkConnector
 function clientCode(SocialNetworkPoster $creator)
 {
     // ...
-    $creator->post("Hello world!");
-    $creator->post("I had a large hamburger this morning!");
-    // ...
+    $creator->post();
 }
 
 /**
@@ -183,8 +188,6 @@ function clientCode(SocialNetworkPoster $creator)
  * the client code.
  */
 print("Testing ConcreteCreator1:\n");
-clientCode(new FacebookPoster("john_smith", "******"));
+clientCode(new GithubPoster("anthoro", "anthoro password"));
 print("\n\n");
 
-print("Testing ConcreteCreator2:\n");
-clientCode(new LinkedInPoster("john_smith@example.com", "******"));
