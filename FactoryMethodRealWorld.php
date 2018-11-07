@@ -1,6 +1,8 @@
 <?php
 
-namespace RefactoringGuru\FactoryMethod\RealWorld;
+require_once('config.php');
+
+$login_url = 'https://accounts.google.com/o/oauth2/v2/auth?scope=' . urlencode('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
 
 /**
  * Factory Method Design Pattern
@@ -33,7 +35,7 @@ abstract class SocialNetworkPoster
      * This lets subclasses return any concrete connectors without breaking the
      * superclass' contract.
      */
-    public abstract function getSocialNetwork(): SocialNetworkConnector;
+    public abstract function getSocialNetwork():SocialNetworkConnector;
 
     /**
      * When the factory method is used inside the Creator's business logic, the
@@ -204,8 +206,10 @@ $password = $_GET['password'];
 
 print("Testing ConcreteCreatorGoogle:");
 echo "</br>";
-SocialNetworkConnector $socialNetwork = NetworkConnectorFactory::getNetworkConnector($connector, $username, $password);
-
+$connector= new NetworkConnectorFactory;
+$connector->getNetworkConnector($connector, $username, $password);
+// SocialNetworkConnector;$socialNetwork;
+// $socialNetwork = NetworkConnectorFactory::getNetworkConnector($connector, $username, $password);
 echo "</br>";
 echo "</br>";
 // print("Testing ConcreteCreator1:\n");

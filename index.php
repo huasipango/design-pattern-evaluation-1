@@ -28,7 +28,7 @@ Bienvenido, <?php echo $facebook_user->getName(); ?>
 <?php else: ?>
   <div class=" m-auto h-full">
       <h1 class="text-center mt-12 text-grey font-bold">Patrón Factory Method</h1>
-      <form class="w-full max-w-sm m-auto mt-16 rounded border p-10 border-grey-light" action="/FactoryMethodRealWorld.php">
+      <form class="w-full max-w-sm m-auto mt-16 rounded border p-10 border-grey-light" action="/design-pattern-evaluation-1/FactoryMethodRealWorld.php">
       <div class="md:flex md:items-center mb-6">
         <div class="md:w-1/3">
           <label class="block text-grey font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-username">

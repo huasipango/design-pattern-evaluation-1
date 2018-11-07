@@ -1,7 +1,7 @@
 <?php
     session_start();
-    require '/config/facebook.php';
-    require 'vendor/autoload.php';
+    require 'config\facebook.php';
+    require 'vendor\autoload.php';
 
     use Facebook\FacebookSession;
     use Facebook\FacebookRedirectLoginHelper;
@@ -13,7 +13,6 @@
 
     FacebookSession::setDefaultApplication($config['app_id'],$config['app_secret']);
     $helper = new FacebookRedirectLoginHelper('http://localhost/design-pattern-evaluation-1/index.php');
-
 
     
     try{
